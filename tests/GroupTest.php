@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use Tomloprod\TimeWarden\Group;
-use Tomloprod\TimeWarden\Task;
 
 it('can be created with a name', function (): void {
     $group = new Group('GroupName');

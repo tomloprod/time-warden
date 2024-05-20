@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use Tomloprod\TimeWarden\Concerns\HasTasks;
 use Tomloprod\TimeWarden\Contracts\Taskable;
-use Tomloprod\TimeWarden\Task;
 
 beforeEach(function (): void {
     $this->tasksClass = new class implements Taskable
