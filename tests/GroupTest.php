@@ -16,10 +16,9 @@ it('can add a task', function (): void {
     $group = new Group('GroupName');
     $task = $group->createTask('TaskName');
 
-    expect($group->getTasks())
-        ->toContain($task);
+    expect($group->getTasks())->toContain($task);
 
-    /** @todo comprobar que task tenga el grupo (taskable) */
+    expect($task->getTaskable())->toBe($group);
 });
 
 it('can replace the last task', function (): void {
