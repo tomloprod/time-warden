@@ -210,10 +210,10 @@ $task->getStartTimestamp(): float
 $task->getEndTimestamp(): float
 
 // Reactive execution time methods
-$task->onExceedsMilliseconds(float $milliseconds, callable $fn): ?self
-$task->onExceedsSeconds(float $seconds, callable $fn): ?self
-$task->onExceedsMinutes(float $minutes, callable $fn): ?self
-$task->onExceedsHours(float $hours, callable $fn): ?self
+$task->onExceedsMilliseconds(float $milliseconds, callable $fn): ?Task
+$task->onExceedsSeconds(float $seconds, callable $fn): ?Task
+$task->onExceedsMinutes(float $minutes, callable $fn): ?Task
+$task->onExceedsHours(float $hours, callable $fn): ?Task
 ```
 
 ### `Group`
