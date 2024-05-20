@@ -8,8 +8,7 @@ use Tomloprod\TimeWarden\Task;
 it('can be created with a name', function (): void {
     $group = new Group('GroupName');
 
-    expect($group->name)
-        ->toBe('GroupName');
+    expect($group->name)->toBe('GroupName');
 });
 
 it('can add a task', function (): void {
@@ -29,11 +28,9 @@ it('can replace the last task', function (): void {
 
     $group->replaceLastTask($task2);
 
-    expect($group->getTasks())
-        ->not->toContain($task1);
+    expect($group->getTasks())->not->toContain($task1);
 
-    expect($group->getTasks())
-        ->toContain($task2);
+    expect($group->getTasks())->toContain($task2);
 });
 
 it('can start the last task if it exists', function (): void {
@@ -42,8 +39,7 @@ it('can start the last task if it exists', function (): void {
 
     $group->start();
 
-    expect($task->hasStarted())
-        ->toBeTrue();
+    expect($task->hasStarted())->toBeTrue();
 });
 
 it('does not start any task if no tasks exist', function (): void {
@@ -51,6 +47,5 @@ it('does not start any task if no tasks exist', function (): void {
 
     $group->start();
 
-    expect($group->getLastTask())
-        ->toBeNull();
+    expect($group->getLastTask())->toBeNull();
 });
