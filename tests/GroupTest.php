@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use Tomloprod\TimeWarden\Group;
-use Tomloprod\TimeWarden\Task;
 
 it('can be created with a name', function (): void {
     $group = new Group('GroupName');
@@ -18,19 +17,6 @@ it('can add a task', function (): void {
     expect($group->getTasks())->toContain($task);
 
     expect($task->getTaskable())->toBe($group);
-});
-
-it('can replace the last task', function (): void {
-    $group = new Group('GroupName');
-
-    $task1 = $group->createTask('TaskName1');
-    $task2 = new Task('TaskName2', $group);
-
-    $group->replaceLastTask($task2);
-
-    expect($group->getTasks())->not->toContain($task1);
-
-    expect($group->getTasks())->toContain($task2);
 });
 
 it('can start the last task if it exists', function (): void {

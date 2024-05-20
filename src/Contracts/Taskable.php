@@ -10,8 +10,6 @@ interface Taskable
 {
     public function createTask(string $taskName): Task;
 
-    public function replaceLastTask(Task $task): void;
-
     /**
      * @return array<Task>
      */

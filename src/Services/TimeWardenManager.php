@@ -75,10 +75,9 @@ final class TimeWardenManager implements Taskable
         /** @var Task|null $lastTask */
         $lastTask = $taskable->getLastTask();
 
-        // If the last task was never started, we overwrite it
+        // If the last task was never started, we replace its name with `$taskName`
         if ($lastTask instanceof Task && ! $lastTask->hasStarted()) {
-            $taskable->replaceLastTask(new Task($taskName, $taskable));
-
+            $lastTask->name = $taskName;
         } else {
             // If there is a task, but it has already started, we stop it
             if ($lastTask instanceof Task && $lastTask->hasStarted()) {
