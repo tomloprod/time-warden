@@ -22,13 +22,6 @@ trait HasTasks
         return $task;
     }
 
-    public function replaceLastTask(Task $task): void
-    {
-        array_pop($this->tasks);
-
-        $this->tasks[] = $task;
-    }
-
     /**
      * @return array<Task>
      */

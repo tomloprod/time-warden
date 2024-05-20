@@ -19,7 +19,6 @@ use Tomloprod\TimeWarden\Task;
  *
  * Taskable methods:
  * @method static Task createTask(string $taskName)
- * @method static void replaceLastTask(Task $task)
  * @method static array<Task> getTasks(string $taskName)
  * @method static Task|null getLastTask()
  * @method static float getDuration()

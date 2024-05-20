@@ -239,9 +239,6 @@ Additionally, it has all the methods of the [Taskable](#taskable) interface.
 // Create a new task within the taskable.
 $taskable->createTask(string $taskName): Task;
 
-// Remove the last task from the taskable and add another in its place.
-$taskable->replaceLastTask(Task $task): void;
-
 $taskable->getTasks(): array;
 
 $taskable->getLastTask(): ?Task;

@@ -20,20 +20,6 @@ it('can add a task', function (): void {
         ->toContain($task);
 });
 
-it('can replace the last task', function (): void {
-    $task1 = $this->tasksClass->createTask('TaskName1');
-
-    $task2 = new Task('TaskName2', $this->tasksClass);
-
-    $this->tasksClass->replaceLastTask($task2);
-
-    expect($this->tasksClass->getTasks())
-        ->not->toContain($task1);
-
-    expect($this->tasksClass->getTasks())
-        ->toContain($task2);
-});
-
 it('can retrieve the last task', function (): void {
     $task1 = $this->tasksClass->createTask('TaskName1');
     $task2 = $this->tasksClass->createTask('TaskName2');
