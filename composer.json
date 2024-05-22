@@ -63,7 +63,6 @@
             "@test:types",
             "@test:type-coverage",
             "@test:unit"
-        ],
-        "timewarden:start": "Tomloprod\\TimeWarden\\Console\\OutputCommand::start"
+        ]
     }
 }
