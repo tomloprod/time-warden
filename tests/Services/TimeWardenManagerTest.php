@@ -50,16 +50,32 @@ it('resets the singleton instance', function (): void {
 it('can create and retrieve groups', function (): void {
     $instance = TimeWardenManager::instance();
 
+    $instance->group('Group1')->task('foo');
+    $instance->group('Group2')->task('bar');
+
+    $groups = $instance->getGroups();
+
+    expect($groups)->toHaveCount(2);
+
+    expect($groups[0])->toBeInstanceOf(Group::class);
+    expect($groups[1])->toBeInstanceOf(Group::class);
+
+    expect($groups[0]->name)->toBe('Group1');
+    expect($groups[1]->name)->toBe('Group2');
+});
+
+it('overwrite last group if doesn\'t have tasks when a new group is created', function (): void {
+    $instance = TimeWardenManager::instance();
+
     $instance->group('Group1');
     $instance->group('Group2');
+    $instance->group('Group3');
 
     $groups = $instance->getGroups();
 
     expect($groups)->toHaveCount(1);
-
+    expect($groups[0]->name)->toBe('Group3');
     expect($groups[0])->toBeInstanceOf(Group::class);
-
-    expect($groups[0]->name)->toBe('Group2');
 });
 
 it('can create tasks of timewarden instance', function (): void {
