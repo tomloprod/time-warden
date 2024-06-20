@@ -61,8 +61,12 @@ final class TimeWardenManager implements Taskable
     {
         $this->stop();
 
-        /** @todo do the same as task(). overwrite empty groups, avoid groups with same name (in this case... active group with name?) */
-        $this->groups[] = new Group($groupName);
+        $group = $this->getLastGroup();
+        if ($group && ! $group->getLastTask() instanceof Task) {
+            $group->name = $groupName;
+        } else {
+            $this->groups[] = new Group($groupName);
+        }
 
         return self::$instance;
     }
