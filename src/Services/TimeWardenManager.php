@@ -24,9 +24,7 @@ final class TimeWardenManager implements Taskable
      */
     private array $groups = [];
 
-    private function __construct()
-    {
-    }
+    private function __construct() {}
 
     public function __clone()
     {

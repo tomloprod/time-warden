@@ -11,9 +11,7 @@ final class Group implements Taskable
 {
     use HasTasks;
 
-    public function __construct(public string $name)
-    {
-    }
+    public function __construct(public string $name) {}
 
     public function start(): void
     {

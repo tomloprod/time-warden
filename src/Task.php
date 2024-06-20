@@ -13,9 +13,7 @@ final class Task
 
     private float $endTimestamp = 0.0;
 
-    public function __construct(public string $name, private readonly ?Taskable $taskable = null)
-    {
-    }
+    public function __construct(public string $name, private readonly ?Taskable $taskable = null) {}
 
     public function start(): void
     {
