@@ -24,7 +24,9 @@ final class TimeWardenManager implements Taskable
      */
     private array $groups = [];
 
-    private function __construct() {}
+    private function __construct()
+    {
+    }
 
     public function __clone()
     {
@@ -60,7 +62,7 @@ final class TimeWardenManager implements Taskable
         $this->stop();
 
         $group = $this->getLastGroup();
-        if ($group && ! $group->getLastTask()) {
+        if ($group && ! $group->getLastTask() instanceof Task) {
             $group->name = $groupName;
         } else {
             $this->groups[] = new Group($groupName);
