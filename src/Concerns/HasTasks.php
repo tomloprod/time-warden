@@ -52,4 +52,28 @@ trait HasTasks
 
         return ($lastTask instanceof Task) ? $lastTask : null;
     }
+
+    public function toArray(): array
+    {
+        /** @var array<string, mixed> $tasksInfo */
+        $tasksInfo = [];
+
+        /** @var Task $task */
+        foreach ($this->getTasks() as $task) {
+            $tasksInfo[] = $task->toArray();
+        }
+
+        return [
+            'name' => $this->name,
+            'duration' => $this->getDuration(),
+            'tasks' => $tasksInfo,
+        ];
+    }
+
+    public function toJson(): string
+    {
+        $json = json_encode($this->toArray());
+
+        return ($json === false) ? '[]' : $json;
+    }
 }

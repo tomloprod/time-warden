@@ -18,4 +18,9 @@ interface Taskable
     public function getLastTask(): ?Task;
 
     public function getDuration(): float;
+
+    /** @return array<string, mixed> */
+    public function toArray(): array;
+
+    public function toJson(): string;
 }

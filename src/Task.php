@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tomloprod\TimeWarden;
 
+use DateTime;
 use DateTimeImmutable;
 use Tomloprod\TimeWarden\Contracts\Taskable;
 
@@ -166,5 +167,25 @@ final class Task
     public function setTestEndTimestamp(float $microtime): void
     {
         $this->endTimestamp = $microtime;
+    }
+
+    /** @return array<string, mixed> */
+    public function toArray(): array
+    {
+        /** @var ?DateTimeImmutable $startDateTime */
+        $startDateTime = $this->getStartDateTime();
+
+        /** @var ?DateTimeImmutable $endDateTime */
+        $endDateTime = $this->getEndDateTime();
+
+        return [
+            'name' => $this->name,
+            'duration' => $this->getDuration(),
+            'friendly_duration' => $this->getFriendlyDuration(),
+            'start_timestamp' => $this->startTimestamp,
+            'end_timestamp' => $this->endTimestamp,
+            'start_datetime' => ($startDateTime instanceof DateTimeImmutable) ? $startDateTime->format(DateTime::ATOM) : null,
+            'end_datetime' => ($endDateTime instanceof DateTimeImmutable) ? $endDateTime->format(DateTime::ATOM) : null,
+        ];
     }
 }
