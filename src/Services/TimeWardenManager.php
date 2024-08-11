@@ -12,10 +12,13 @@ use Tomloprod\TimeWarden\Concerns\HasTasks;
 use Tomloprod\TimeWarden\Contracts\Taskable;
 use Tomloprod\TimeWarden\Group;
 use Tomloprod\TimeWarden\Task;
+use Tomloprod\TimeWarden\TimeWardenSummary;
 
 final class TimeWardenManager implements Taskable
 {
     use HasTasks;
+
+    public string $name = 'default';
 
     private static TimeWardenManager $instance;
 
@@ -125,6 +128,13 @@ final class TimeWardenManager implements Taskable
         return $this->groups;
     }
 
+    public function getSummary(): TimeWardenSummary
+    {
+        $this->stop();
+
+        return new TimeWardenSummary();
+    }
+
     public function output(): string
     {
         $this->stop();
@@ -200,9 +210,7 @@ final class TimeWardenManager implements Taskable
             ->setHeaders($columns)
             ->setRows($rows)
             ->setStyle('box-double')
-            // ->setFooterTitle('Thanks for using TimeWarden')
             ->setFooterTitle('Total: '.round($totalDuration, 2).' ms')
-
             ->setHeaderTitle('TIMEWARDEN');
 
         $table->render();

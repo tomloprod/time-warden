@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Tomloprod\TimeWarden\Group;
 use Tomloprod\TimeWarden\Services\TimeWardenManager;
 use Tomloprod\TimeWarden\Task;
+use Tomloprod\TimeWarden\TimeWardenSummary;
 
 beforeEach(function (): void {
     TimeWardenManager::instance()->reset();
@@ -188,4 +189,12 @@ test('output returns tasks and groups', function (): void {
         ->toContain('Group 1')
         ->toContain('Group 2')
         ->toContain('G2 - Task 1');
+});
+
+it('can obtain a TimeWardenSummary', function (): void {
+    $instance = TimeWardenManager::instance();
+
+    $instance->task('Task1')->task('Task2');
+
+    expect($instance->getSummary())->toBeInstanceOf(TimeWardenSummary::class);
 });
