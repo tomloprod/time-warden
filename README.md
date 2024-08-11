@@ -294,6 +294,38 @@ $timeWardenSummary->toArray(): array;
 $timeWardenSummary->toJson(): string;
 ```
 
+Here is an example of the data returned in array format:
+
+```php
+$summaryArray = [
+    [
+        'name' => 'default',
+        'duration' => 42.0,
+        'tasks' => [
+            [
+                'name' => 'TaskName1',
+                'duration' => 19.0,
+                'friendly_duration' => '19ms',
+                'start_timestamp' => 1496664000.0,
+                'end_timestamp' => 1496664000.019,
+                'start_datetime' => '2017-06-05T12:00:00+00:00',
+                'end_datetime' => '2017-06-05T12:00:00+00:00',
+            ],
+            [
+                'name' => 'TaskName2',
+                'duration' => 23.0,
+                'friendly_duration' => '23ms',
+                'start_timestamp' => 1496664000.0,
+                'end_timestamp' => 1496664000.023,
+                'start_datetime' => '2017-06-05T12:00:00+00:00',
+                'end_datetime' => '2017-06-05T12:00:00+00:00',
+            ],
+        ],
+    ],
+    [ // Others groups... ],
+];
+```
+
 ## **🚀 Installation & Requirements**
 
 > **Requires [PHP 8.2+](https://php.net/releases/)**
