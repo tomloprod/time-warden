@@ -198,10 +198,10 @@ final class TimeWardenManager implements Taskable
         }
 
         // Footer
-        //$rows[] = new TableSeparator();
-        //$rows[] = ['Nº groups', 'Nº tasks', 'Total duration'];
-        //$rows[] = [$totalGroups, $totalTasks, $totalDuration];
-        //$rows[] = ['', '', 'Total ' . $totalDuration];
+        // $rows[] = new TableSeparator();
+        // $rows[] = ['Nº groups', 'Nº tasks', 'Total duration'];
+        // $rows[] = [$totalGroups, $totalTasks, $totalDuration];
+        // $rows[] = ['', '', 'Total ' . $totalDuration];
 
         $output = new BufferedOutput();
         $table = new Table($output);
