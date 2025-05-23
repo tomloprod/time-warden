@@ -22,7 +22,7 @@
         "symfony/console": "^7.0"
     },
     "require-dev": {
-        "laravel/pint": "^1.16.1",
+        "laravel/pint": "^1.22.1",
         "pestphp/pest": "^3.8.2",
         "pestphp/pest-plugin-type-coverage": "^3.5.0",
         "rector/rector": "^1.1.0"
