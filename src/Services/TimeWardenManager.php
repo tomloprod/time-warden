@@ -5,12 +5,10 @@ declare(strict_types=1);
 namespace Tomloprod\TimeWarden\Services;
 
 use Exception;
-use Symfony\Component\Console\Helper\Table;
-use Symfony\Component\Console\Helper\TableSeparator;
-use Symfony\Component\Console\Output\BufferedOutput;
 use Tomloprod\TimeWarden\Concerns\HasTasks;
 use Tomloprod\TimeWarden\Contracts\Taskable;
 use Tomloprod\TimeWarden\Group;
+use Tomloprod\TimeWarden\Support\Console\Table;
 use Tomloprod\TimeWarden\Task;
 use Tomloprod\TimeWarden\TimeWardenSummary;
 
@@ -192,7 +190,7 @@ final class TimeWardenManager implements Taskable
         }
 
         if ($totalTasks > 0) {
-            $rows[] = new TableSeparator();
+            $rows[] = Table::separator();
         }
 
         /** @var Group|null $lastIterateGroup */
@@ -214,34 +212,22 @@ final class TimeWardenManager implements Taskable
             }
 
             if ($iGroup !== count($this->groups) - 1) {
-                $rows[] = new TableSeparator();
+                $rows[] = Table::separator();
             }
 
             $totalDuration += $group->getDuration();
             $totalGroups++;
         }
 
-        // Footer
-        // $rows[] = new TableSeparator();
-        // $rows[] = ['Nº groups', 'Nº tasks', 'Total duration'];
-        // $rows[] = [$totalGroups, $totalTasks, $totalDuration];
-        // $rows[] = ['', '', 'Total ' . $totalDuration];
-
-        $output = new BufferedOutput();
-        $table = new Table($output);
-
-        $table
+        $output = (new Table())
             ->setHeaders($columns)
             ->setRows($rows)
             ->setStyle('box-double')
             ->setFooterTitle('Total: '.$totalDuration.' ms')
-            ->setHeaderTitle('TIMEWARDEN');
+            ->setHeaderTitle('TIMEWARDEN')
+            ->render();
 
-        $table->render();
-
-        $output = $output->fetch();
-
-        return "\n".$output;
+        return PHP_EOL.$output;
     }
 
     private function getActiveTaskable(): Taskable
