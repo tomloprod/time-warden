@@ -12,6 +12,8 @@
 
 TimeWarden is a lightweight PHP library that allows you to **monitor the processing time of tasks** (*useful during the development stage and debugging*) and also lets you set estimated execution times for tasks, **enabling reactive actions** when tasks exceed their estimated duration.
 
+TimeWarden uses **high-resolution timing** (`hrtime`) for **nanosecond precision**, ensuring accurate measurements even for very fast operations.
+
 TimeWarden is framework-agnostic, meaning it's not exclusive to any particular framework. It can seamlessly integrate into any PHP application, whether they utilize frameworks like Laravel (🧡), Symfony, or operate without any framework at all.
 
 ## **✨ Getting Started**
@@ -263,8 +265,9 @@ $task->hasEnded(): bool
 $task->getStartDateTime(): ?DateTimeImmutable
 $task->getEndDateTime(): ?DateTimeImmutable
 
-$task->getStartTimestamp(): float
-$task->getEndTimestamp(): float
+// Returns the start and end timestamps in nanoseconds (high precision)
+$task->getStartTimestamp(): int
+$task->getEndTimestamp(): int
 
 /** @return array<string, mixed> */
 $task->toArray(): array
@@ -341,8 +344,8 @@ $summaryArray = [
                 'name' => 'TaskName1',
                 'duration' => 19.0,
                 'friendly_duration' => '19ms',
-                'start_timestamp' => 1496664000.0,
-                'end_timestamp' => 1496664000.019,
+                'start_timestamp' => 1496664000000000000, // nanoseconds
+                'end_timestamp' => 1496664000019000000,   // nanoseconds
                 'start_datetime' => '2017-06-05T12:00:00+00:00',
                 'end_datetime' => '2017-06-05T12:00:00+00:00',
             ],
@@ -350,8 +353,8 @@ $summaryArray = [
                 'name' => 'TaskName2',
                 'duration' => 23.0,
                 'friendly_duration' => '23ms',
-                'start_timestamp' => 1496664000.0,
-                'end_timestamp' => 1496664000.023,
+                'start_timestamp' => 1496664000000000000, // nanoseconds
+                'end_timestamp' => 1496664000023000000,   // nanoseconds
                 'start_datetime' => '2017-06-05T12:00:00+00:00',
                 'end_datetime' => '2017-06-05T12:00:00+00:00',
             ],
