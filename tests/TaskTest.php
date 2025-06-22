@@ -104,9 +104,14 @@ test('getFriendlyDuration', function (): void {
     expect($task->getFriendlyDuration())->toContain('1h 10min 20sec 30ms');
 });
 
+/**
+ * Convert DateTime to nanoseconds for testing
+ *
+ * @return int Nanoseconds
+ */
 function dateTimeToTimestamp(DateTimeImmutable $datetime): int
 {
-    // Convert to nanoseconds for hrtime compatibility
+    // Convert DateTime to nanoseconds for testing
     $seconds = $datetime->getTimestamp();
     $microseconds = (int) $datetime->format('u');
 

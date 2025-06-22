@@ -11,12 +11,12 @@ use Tomloprod\TimeWarden\Contracts\Taskable;
 final class Task
 {
     /**
-     * Start time in nanoseconds (hrtime format)
+     * Start time in nanoseconds
      */
     private int $startTimestamp = 0;
 
     /**
-     * End time in nanoseconds (hrtime format)
+     * End time in nanoseconds
      */
     private int $endTimestamp = 0;
 
@@ -124,7 +124,7 @@ final class Task
      */
     public function getDuration(): float
     {
-        // Convertir de nanosegundos a milisegundos
+        // Convert nanoseconds to milliseconds
         $duration = ($this->endTimestamp - $this->startTimestamp) / 1_000_000;
 
         return ($duration > 0) ? round($duration, 2) : 0.0;
@@ -147,8 +147,6 @@ final class Task
 
     /**
      * Get the start timestamp in nanoseconds
-     *
-     * @return int Nanoseconds since system boot (hrtime format)
      */
     public function getStartTimestamp(): int
     {
@@ -157,8 +155,6 @@ final class Task
 
     /**
      * Get the end timestamp in nanoseconds
-     *
-     * @return int Nanoseconds since system boot (hrtime format)
      */
     public function getEndTimestamp(): int
     {
@@ -168,7 +164,7 @@ final class Task
     public function getStartDateTime(): ?DateTimeImmutable
     {
         if ($this->hasStarted()) {
-            // Convertir nanosegundos a segundos para DateTime
+            // Convert nanoseconds to seconds for DateTime
             $seconds = $this->startTimestamp / 1_000_000_000;
 
             return new DateTimeImmutable('@'.number_format($seconds, 6, '.', ''));
@@ -180,7 +176,7 @@ final class Task
     public function getEndDateTime(): ?DateTimeImmutable
     {
         if ($this->hasEnded()) {
-            // Convertir nanosegundos a segundos para DateTime
+            // Convert nanoseconds to seconds for DateTime
             $seconds = $this->endTimestamp / 1_000_000_000;
 
             return new DateTimeImmutable('@'.number_format($seconds, 6, '.', ''));
@@ -192,21 +188,21 @@ final class Task
     /**
      * Set start timestamp for testing purposes
      *
-     * @param  int  $hrtime  Nanoseconds (hrtime format)
+     * @param  int  $nanoseconds  Nanoseconds
      */
-    public function setTestStartTimestamp(int $hrtime): void
+    public function setTestStartTimestamp(int $nanoseconds): void
     {
-        $this->startTimestamp = $hrtime;
+        $this->startTimestamp = $nanoseconds;
     }
 
     /**
      * Set end timestamp for testing purposes
      *
-     * @param  int  $hrtime  Nanoseconds (hrtime format)
+     * @param  int  $nanoseconds  Nanoseconds
      */
-    public function setTestEndTimestamp(int $hrtime): void
+    public function setTestEndTimestamp(int $nanoseconds): void
     {
-        $this->endTimestamp = $hrtime;
+        $this->endTimestamp = $nanoseconds;
     }
 
     /** @return array<string, mixed> */
@@ -222,8 +218,8 @@ final class Task
             'name' => $this->name,
             'duration' => $this->getDuration(),
             'friendly_duration' => $this->getFriendlyDuration(),
-            'start_timestamp' => $this->startTimestamp, // nanoseconds (hrtime format)
-            'end_timestamp' => $this->endTimestamp,     // nanoseconds (hrtime format)
+            'start_timestamp' => $this->startTimestamp, // nanoseconds
+            'end_timestamp' => $this->endTimestamp,     // nanoseconds
             'start_datetime' => ($startDateTime instanceof DateTimeImmutable) ? $startDateTime->format(DateTime::ATOM) : null,
             'end_datetime' => ($endDateTime instanceof DateTimeImmutable) ? $endDateTime->format(DateTime::ATOM) : null,
         ];
