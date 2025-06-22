@@ -210,7 +210,7 @@ final class TimeWardenManager implements Taskable
             ->setHeaders($columns)
             ->setRows($rows)
             ->setStyle('box-double')
-            ->setFooterTitle('Total: '.round($totalDuration, 2).' ms')
+            ->setFooterTitle('Total: '.$totalDuration.' ms')
             ->setHeaderTitle('TIMEWARDEN');
 
         $table->render();

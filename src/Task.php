@@ -125,9 +125,7 @@ final class Task
     public function getDuration(): float
     {
         // Convert nanoseconds to milliseconds
-        $duration = ($this->endTimestamp - $this->startTimestamp) / 1_000_000;
-
-        return ($duration > 0) ? round($duration, 2) : 0.0;
+        return ($this->endTimestamp - $this->startTimestamp) / 1_000_000;
     }
 
     public function getTaskable(): ?Taskable

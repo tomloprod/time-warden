@@ -42,7 +42,7 @@ trait HasTasks
             $duration += $task->getDuration();
         }
 
-        return ($duration > 0) ? round($duration, 2) : 0.0;
+        return $duration;
     }
 
     public function getLastTask(): ?Task
