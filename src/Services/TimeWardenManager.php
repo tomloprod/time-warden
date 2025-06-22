@@ -121,6 +121,30 @@ final class TimeWardenManager implements Taskable
     }
 
     /**
+     * Measure the execution time of a callable
+     *
+     * @param  callable  $fn  The callable to measure
+     * @param  string  $taskName  The task name. If not provided, will use 'callable' as default.
+     * @return float The duration time in milliseconds
+     */
+    public function measure(callable $fn, string $taskName = 'callable'): float
+    {
+        // Create task and start
+        $this->task($taskName)->start();
+
+        try {
+            $fn();
+        } finally {
+            $this->stop();
+        }
+
+        // Get the duration from the last task
+        $lastTask = $this->getActiveTaskable()->getLastTask();
+
+        return $lastTask instanceof Task ? $lastTask->getDuration() : 0.0;
+    }
+
+    /**
      * @return array<Group>
      */
     public function getGroups(): array
