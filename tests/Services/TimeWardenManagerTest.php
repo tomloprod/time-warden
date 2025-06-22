@@ -198,3 +198,87 @@ it('can obtain a TimeWardenSummary', function (): void {
 
     expect($instance->getSummary())->toBeInstanceOf(TimeWardenSummary::class);
 });
+
+it('can measure execution time of a callable with default task name', function (): void {
+    $instance = TimeWardenManager::instance();
+
+    $executed = false;
+
+    $duration = $instance->measure(function () use (&$executed): void {
+        $executed = true;
+    });
+
+    expect($duration)->toBeFloat();
+    expect($executed)->toBeTrue();
+
+    $tasks = $instance->getTasks();
+    expect($tasks)->toHaveCount(1);
+    expect($tasks[0]->name)->toBe('callable');
+    expect($tasks[0])->toBeInstanceOf(Task::class);
+});
+
+it('can measure execution time of a callable with custom task name', function (): void {
+    $instance = TimeWardenManager::instance();
+
+    $executed = false;
+
+    $duration = $instance->measure(function () use (&$executed): void {
+        $executed = true;
+    }, 'custom-task');
+
+    expect($duration)->toBeFloat();
+    expect($executed)->toBeTrue();
+
+    $tasks = $instance->getTasks();
+    expect($tasks)->toHaveCount(1);
+    expect($tasks[0]->name)->toBe('custom-task');
+    expect($tasks[0])->toBeInstanceOf(Task::class);
+});
+
+it('can measure execution time inside a group', function (): void {
+    $instance = TimeWardenManager::instance();
+
+    $instance->group('Test Group');
+
+    $executed = false;
+
+    $duration = $instance->measure(function () use (&$executed): void {
+        $executed = true;
+    }, 'group-task');
+
+    expect($duration)->toBeFloat();
+    expect($executed)->toBeTrue();
+
+    $groups = $instance->getGroups();
+    expect($groups)->toHaveCount(1);
+
+    $tasks = $groups[0]->getTasks();
+    expect($tasks)->toHaveCount(1);
+    expect($tasks[0]->name)->toBe('group-task');
+    expect($tasks[0])->toBeInstanceOf(Task::class);
+
+    // TimeWarden instance should have no tasks (they're in the group)
+    expect($instance->getTasks())->toHaveCount(0);
+});
+
+it('ensures task is stopped even if callable throws exception', function (): void {
+    $instance = TimeWardenManager::instance();
+
+    $exceptionThrown = false;
+
+    try {
+        $instance->measure(function (): void {
+            throw new Exception('Test exception');
+        }, 'exception-task');
+    } catch (Exception $e) {
+        $exceptionThrown = true;
+        expect($e->getMessage())->toBe('Test exception');
+    }
+
+    expect($exceptionThrown)->toBeTrue();
+
+    $tasks = $instance->getTasks();
+    expect($tasks)->toHaveCount(1);
+    expect($tasks[0]->name)->toBe('exception-task');
+    expect($tasks[0])->toBeInstanceOf(Task::class);
+});

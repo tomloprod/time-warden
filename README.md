@@ -52,6 +52,38 @@ $task->onExceedsMinutes(5, function () { ... });
 $task->onExceedsHours(2, function () { ... });
 ```
 
+### Quick Measurement
+TimeWarden provides a convenient `measure()` method that automatically handles task creation, starting, and stopping for you. This method executes a callable and returns the execution time in milliseconds.
+
+#### Example
+```php
+// Simple measurement
+$duration = timeWarden()->measure(function() {
+    // Your code here
+    sleep(1);
+    processData();
+});
+
+echo "Execution took: {$duration} ms";
+
+// With custom task name
+$duration = timeWarden()->measure(function() {
+    // Your code here
+    processArticles();
+}, 'Processing Articles');
+
+// The task will appear in your TimeWarden output with the specified name
+echo timeWarden()->output();
+```
+
+The `measure()` method:
+- Automatically creates a task with the provided name (or 'callable' by default)
+- Starts timing before execution
+- Executes your callable
+- Stops timing after execution (even if an exception occurs)
+- Returns the duration in milliseconds
+- Integrates with groups and the TimeWarden workflow
+
 ### Execution Time Debugging
 It allows you to measure the execution time of tasks in your application, as well as the possibility of adding those tasks to a group.
 
@@ -179,6 +211,9 @@ TimeWarden::start(): TimeWarden
 // Stops the last created task
 TimeWarden::stop(): TimeWarden
 
+// Measures the execution time of a callable and returns duration in milliseconds
+TimeWarden::measure(callable $fn, ?string $taskName = null): float
+
 // Obtains all the created groups
 TimeWarden::getGroups(): array
 
@@ -190,7 +225,7 @@ TimeWarden::getGroups(): array
  * Through that instance, you can retrieve the summary 
  * in array or string (JSON) format.
  */
-TimeWarden::getSummary(): TimeWardenSummary;
+TimeWarden::getSummary(): TimeWardenSummary
 
 /**
  * Returns a table with execution time debugging info 
@@ -262,18 +297,18 @@ Additionally, it has all the methods of the [Taskable](#taskable) interface.
 #### Methods
 ```php
 // Create a new task within the taskable.
-$taskable->createTask(string $taskName): Task;
+$taskable->createTask(string $taskName): Task
 
-$taskable->getTasks(): array;
+$taskable->getTasks(): array
 
-$taskable->getLastTask(): ?Task;
+$taskable->getLastTask(): ?Task
 
 // Return the total time in milliseconds of all tasks within the taskable.
-$taskable->getDuration(): float;
+$taskable->getDuration(): float
 
-$taskable->toArray(): array;
+$taskable->toArray(): array
 
-$taskable->toJson(): string;
+$taskable->toJson(): string
 ```
 
 ### `TimeWardenSummary`
@@ -290,8 +325,8 @@ $timeWardenSummary = timeWarden()->getSummary();
 #### Methods
 ```php
 
-$timeWardenSummary->toArray(): array;
-$timeWardenSummary->toJson(): string;
+$timeWardenSummary->toArray(): array
+$timeWardenSummary->toJson(): string
 ```
 
 Here is an example of the data returned in array format:

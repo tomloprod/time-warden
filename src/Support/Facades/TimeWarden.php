@@ -14,6 +14,7 @@ use Tomloprod\TimeWarden\Task;
  * @method static TimeWardenManager task(string $taskName)
  * @method static TimeWardenManager start()
  * @method static Task|null stop()
+ * @method static float measure(callable $fn, ?string $taskName = null)
  * @method static array<Group> getGroups()
  * @method static string output()
  *

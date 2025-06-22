@@ -10,23 +10,36 @@ use Tomloprod\TimeWarden\Contracts\Taskable;
 
 final class Task
 {
-    private float $startTimestamp = 0.0;
+    /**
+     * Start time in nanoseconds
+     */
+    private int $startTimestamp = 0;
 
-    private float $endTimestamp = 0.0;
+    /**
+     * End time in nanoseconds
+     */
+    private int $endTimestamp = 0;
 
     public function __construct(public string $name, private readonly ?Taskable $taskable = null) {}
 
     public function start(): void
     {
         if (! $this->hasStarted()) {
-            $this->startTimestamp = (float) microtime(true);
+            /**
+             * Force garbage collection before timing starts to ensure accurate
+             * measurements. This prevents random GC cycles from affecting
+             * benchmark results.
+             */
+            gc_collect_cycles();
+
+            $this->startTimestamp = hrtime(true);
         }
     }
 
     public function stop(?callable $fn = null): void
     {
         if (! $this->hasEnded()) {
-            $this->endTimestamp = (float) microtime(true);
+            $this->endTimestamp = hrtime(true);
         }
 
         if ($fn !== null) {
@@ -111,9 +124,8 @@ final class Task
      */
     public function getDuration(): float
     {
-        $duration = ($this->endTimestamp - $this->startTimestamp) * 1000;
-
-        return ($duration > 0) ? round($duration, 2) : 0.0;
+        // Convert nanoseconds to milliseconds
+        return ($this->endTimestamp - $this->startTimestamp) / 1_000_000;
     }
 
     public function getTaskable(): ?Taskable
@@ -123,20 +135,26 @@ final class Task
 
     public function hasStarted(): bool
     {
-        return ((int) $this->startTimestamp) !== 0;
+        return $this->startTimestamp !== 0;
     }
 
     public function hasEnded(): bool
     {
-        return ((int) $this->endTimestamp) !== 0;
+        return $this->endTimestamp !== 0;
     }
 
-    public function getStartTimestamp(): float
+    /**
+     * Get the start timestamp in nanoseconds
+     */
+    public function getStartTimestamp(): int
     {
         return $this->startTimestamp;
     }
 
-    public function getEndTimestamp(): float
+    /**
+     * Get the end timestamp in nanoseconds
+     */
+    public function getEndTimestamp(): int
     {
         return $this->endTimestamp;
     }
@@ -144,7 +162,10 @@ final class Task
     public function getStartDateTime(): ?DateTimeImmutable
     {
         if ($this->hasStarted()) {
-            return new DateTimeImmutable('@'.$this->startTimestamp);
+            // Convert nanoseconds to seconds for DateTime
+            $seconds = $this->startTimestamp / 1_000_000_000;
+
+            return new DateTimeImmutable('@'.number_format($seconds, 6, '.', ''));
         }
 
         return null;
@@ -153,20 +174,33 @@ final class Task
     public function getEndDateTime(): ?DateTimeImmutable
     {
         if ($this->hasEnded()) {
-            return new DateTimeImmutable('@'.$this->endTimestamp);
+            // Convert nanoseconds to seconds for DateTime
+            $seconds = $this->endTimestamp / 1_000_000_000;
+
+            return new DateTimeImmutable('@'.number_format($seconds, 6, '.', ''));
         }
 
         return null;
     }
 
-    public function setTestStartTimestamp(float $microtime): void
+    /**
+     * Set start timestamp for testing purposes
+     *
+     * @param  int  $nanoseconds  Nanoseconds
+     */
+    public function setTestStartTimestamp(int $nanoseconds): void
     {
-        $this->startTimestamp = $microtime;
+        $this->startTimestamp = $nanoseconds;
     }
 
-    public function setTestEndTimestamp(float $microtime): void
+    /**
+     * Set end timestamp for testing purposes
+     *
+     * @param  int  $nanoseconds  Nanoseconds
+     */
+    public function setTestEndTimestamp(int $nanoseconds): void
     {
-        $this->endTimestamp = $microtime;
+        $this->endTimestamp = $nanoseconds;
     }
 
     /** @return array<string, mixed> */
@@ -182,8 +216,8 @@ final class Task
             'name' => $this->name,
             'duration' => $this->getDuration(),
             'friendly_duration' => $this->getFriendlyDuration(),
-            'start_timestamp' => $this->startTimestamp,
-            'end_timestamp' => $this->endTimestamp,
+            'start_timestamp' => $this->startTimestamp, // nanoseconds
+            'end_timestamp' => $this->endTimestamp,     // nanoseconds
             'start_datetime' => ($startDateTime instanceof DateTimeImmutable) ? $startDateTime->format(DateTime::ATOM) : null,
             'end_datetime' => ($endDateTime instanceof DateTimeImmutable) ? $endDateTime->format(DateTime::ATOM) : null,
         ];

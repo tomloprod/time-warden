@@ -5,12 +5,10 @@ declare(strict_types=1);
 namespace Tomloprod\TimeWarden\Services;
 
 use Exception;
-use Symfony\Component\Console\Helper\Table;
-use Symfony\Component\Console\Helper\TableSeparator;
-use Symfony\Component\Console\Output\BufferedOutput;
 use Tomloprod\TimeWarden\Concerns\HasTasks;
 use Tomloprod\TimeWarden\Contracts\Taskable;
 use Tomloprod\TimeWarden\Group;
+use Tomloprod\TimeWarden\Support\Console\Table;
 use Tomloprod\TimeWarden\Task;
 use Tomloprod\TimeWarden\TimeWardenSummary;
 
@@ -121,6 +119,30 @@ final class TimeWardenManager implements Taskable
     }
 
     /**
+     * Measure the execution time of a callable
+     *
+     * @param  callable  $fn  The callable to measure
+     * @param  string  $taskName  The task name. If not provided, will use 'callable' as default.
+     * @return float The duration time in milliseconds
+     */
+    public function measure(callable $fn, string $taskName = 'callable'): float
+    {
+        // Create task and start
+        $this->task($taskName)->start();
+
+        try {
+            $fn();
+        } finally {
+            $this->stop();
+        }
+
+        // Get the duration from the last task
+        $lastTask = $this->getActiveTaskable()->getLastTask();
+
+        return $lastTask instanceof Task ? $lastTask->getDuration() : 0.0;
+    }
+
+    /**
      * @return array<Group>
      */
     public function getGroups(): array
@@ -168,7 +190,7 @@ final class TimeWardenManager implements Taskable
         }
 
         if ($totalTasks > 0) {
-            $rows[] = new TableSeparator();
+            $rows[] = Table::separator();
         }
 
         /** @var Group|null $lastIterateGroup */
@@ -190,34 +212,22 @@ final class TimeWardenManager implements Taskable
             }
 
             if ($iGroup !== count($this->groups) - 1) {
-                $rows[] = new TableSeparator();
+                $rows[] = Table::separator();
             }
 
             $totalDuration += $group->getDuration();
             $totalGroups++;
         }
 
-        // Footer
-        // $rows[] = new TableSeparator();
-        // $rows[] = ['Nº groups', 'Nº tasks', 'Total duration'];
-        // $rows[] = [$totalGroups, $totalTasks, $totalDuration];
-        // $rows[] = ['', '', 'Total ' . $totalDuration];
-
-        $output = new BufferedOutput();
-        $table = new Table($output);
-
-        $table
+        $output = (new Table())
             ->setHeaders($columns)
             ->setRows($rows)
             ->setStyle('box-double')
-            ->setFooterTitle('Total: '.round($totalDuration, 2).' ms')
-            ->setHeaderTitle('TIMEWARDEN');
+            ->setFooterTitle('Total: '.$totalDuration.' ms')
+            ->setHeaderTitle('TIMEWARDEN')
+            ->render();
 
-        $table->render();
-
-        $output = $output->fetch();
-
-        return "\n".$output;
+        return PHP_EOL.$output;
     }
 
     private function getActiveTaskable(): Taskable

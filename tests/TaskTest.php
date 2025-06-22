@@ -104,9 +104,18 @@ test('getFriendlyDuration', function (): void {
     expect($task->getFriendlyDuration())->toContain('1h 10min 20sec 30ms');
 });
 
-function dateTimeToTimestamp(DateTimeImmutable $datetime): float
+/**
+ * Convert DateTime to nanoseconds for testing
+ *
+ * @return int Nanoseconds
+ */
+function dateTimeToTimestamp(DateTimeImmutable $datetime): int
 {
-    return (float) $datetime->getTimestamp() + ((int) $datetime->format('u') / 1000000);
+    // Convert DateTime to nanoseconds for testing
+    $seconds = $datetime->getTimestamp();
+    $microseconds = (int) $datetime->format('u');
+
+    return ($seconds * 1_000_000_000) + ($microseconds * 1000);
 }
 
 test('onExceedsMilliseconds (exceeds test)', function (): void {
